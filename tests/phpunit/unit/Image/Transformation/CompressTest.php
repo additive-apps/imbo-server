@@ -11,6 +11,7 @@
 namespace ImboUnitTest\Image\Transformation;
 
 use Imbo\Image\Transformation\Compress;
+use Imbo\Exception\TransformationException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,12 +32,11 @@ class CompressTest extends TestCase {
         $this->transformation = new Compress();
     }
 
-    /**
-     * @expectedException Imbo\Exception\TransformationException
-     * @expectedExceptionMessage Missing required parameter: level
-     * @expectedExceptionCode 400
-     */
     public function testThrowsExceptionOnMissingLevelParameter() {
+        $this->expectExceptionObject(new TransformationException(
+            'Missing required parameter: level',
+            400
+        ));
         $this->transformation->transform([]);
     }
 
@@ -60,12 +60,11 @@ class CompressTest extends TestCase {
         );
     }
 
-    /**
-     * @expectedException Imbo\Exception\TransformationException
-     * @expectedExceptionMessage level must be between 0 and 100
-     * @expectedExceptionCode 400
-     */
     public function testThrowsExceptionOnInvalidLevel() {
+        $this->expectExceptionObject(new TransformationException(
+            'level must be between 0 and 100',
+            400
+        ));
         $this->transformation->transform(['level' => 200]);
     }
 }
