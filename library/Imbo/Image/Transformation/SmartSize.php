@@ -66,8 +66,8 @@ class SmartSize extends Transformation implements ListenerInterface {
             return $this->simpleCrop($event, $params['width'], $params['height']);
         }
 
-        if (!empty($params['crop']) && array_search($params['crop'], ['close', 'medium', 'wide']) === false) {
-            throw new TransformationException('Invalid crop value. Valid values are: close,medium,wide', 400);
+        if (!empty($params['crop']) && array_search($params['crop'], ['close', 'medium', 'wide', 'full']) === false) {
+            throw new TransformationException('Invalid crop value. Valid values are: close,medium,wide,full', 400);
         }
 
         $targetWidth = $params['width'];
@@ -214,6 +214,9 @@ class SmartSize extends Transformation implements ListenerInterface {
             case 'wide':
                 return 0.66;
 
+            case 'full':
+                return 1;
+
             default:
                 return 0.5;
         }
@@ -232,6 +235,9 @@ class SmartSize extends Transformation implements ListenerInterface {
 
             case 'wide':
                 return 1.6;
+
+            case 'full':
+                return 2;
 
             default:
                 return 1.25;
