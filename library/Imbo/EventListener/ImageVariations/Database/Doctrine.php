@@ -73,6 +73,26 @@ class Doctrine implements DatabaseInterface {
      * {@inheritdoc}
      */
     public function storeImageVariationMetadata($user, $imageIdentifier, $width, $height) {
+        // Check if table entry already exists and skip
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb->select('iv.*')
+            ->from($this->params['tableName'], 'iv')
+            ->where('iv.user = :user')
+            ->andWhere('iv.imageIdentifier = :imageIdentifier')
+            ->andWhere('iv.width = :width')
+            ->andWhere('iv.height = :height')
+            ->setParameters([
+                ':user'            => $user,
+                ':imageIdentifier' => $imageIdentifier,
+                ':width'           => $width,
+                ':height'          => $height,
+            ]);
+
+        $stmt = $qb->execute();
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+
         return (boolean) $this->getConnection()->insert($this->params['tableName'], [
             'added'           => time(),
             'user'            => $user,
